@@ -71,29 +71,33 @@ def run_anu():
 
             search_results = soup.select('.kCrYT a')
             search_text = ''
+            c = 0
 
             for links in search_results:
                 if ('/url' in links.get('href') and 'BNeawe UPmit AP7Wnd' in str(links)):
                     # search_text += str(links) + '\n'
-                    search_url = links.get('href')[15:]
-                    search_text = search_url[:search_url.find('/')]
-                    print(search_url)
+                    search_url = links.get('href')
+                    search_text = links.get('href')[15:]
+                    search_text = search_text[:search_text.find('/')]
+                    print(search_text)
                     talk(search_text)
                     talk('Do you want to visit this link')
                     while(True):
-                        yes_no = take_command().tolower()
+                        yes_no = listen_bg()
+                        if(c == 1):
+                            break
                         if('yes' in yes_no):
-                            webbrowser.open_new_tab(search_url)
+                            webbrowser.open_new_tab('https://google.com/'+search_url)
                             break
                         elif('no' in yes_no):
                             break
                         else:
                             continue
-
-            
+                    if(c==1):
+                        break   
         elif 'who is' in command:
             person = command.replace('who is', '')
-            info = wikipedia.summary(person, 1)
+            info = wikipedia.summary(person, 3)
             print(info)
             talk(info)
         elif 'joke' in command:
@@ -101,7 +105,7 @@ def run_anu():
         elif "stop" in command:
             break
         elif "exit" in command:
-            exit()
+            exit(0)
         else:
             talk('Please say the command again.')
 
