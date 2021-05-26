@@ -30,9 +30,9 @@ def listen_bg():
                 print('Recognized...')
                 command = command.lower()
                 print(command)
-                if 'anu' in command:
+                if 'hello anu' in command:
                     print(command)
-                    return 'anu'
+                    return 'hello anu'
                 else:
                     return command
             except:
@@ -52,7 +52,10 @@ def take_command():
 
 def run_anu():
     talk("Hello there i am anu, How may i help you")
+    c = 0
     while True:
+        if(c==1):
+            break 
         command = take_command()
         print(command)
         if 'play' in command and 'song' in command:
@@ -71,11 +74,12 @@ def run_anu():
 
             search_results = soup.select('.kCrYT a')
             search_text = ''
-            c = 0
 
             for links in search_results:
                 if ('/url' in links.get('href') and 'BNeawe UPmit AP7Wnd' in str(links)):
                     # search_text += str(links) + '\n'
+                    if(c == 1):
+                        break
                     search_url = links.get('href')
                     search_text = links.get('href')[15:]
                     search_text = search_text[:search_text.find('/')]
@@ -84,17 +88,16 @@ def run_anu():
                     talk('Do you want to visit this link')
                     while(True):
                         yes_no = listen_bg()
-                        if(c == 1):
-                            break
                         if('yes' in yes_no):
                             webbrowser.open_new_tab('https://google.com/'+search_url)
+                            c=1
                             break
                         elif('no' in yes_no):
                             break
                         else:
                             continue
-                    if(c==1):
-                        break   
+                if(c==1):
+                    break   
         elif 'who is' in command:
             person = command.replace('who is', '')
             info = wikipedia.summary(person, 3)
@@ -102,7 +105,7 @@ def run_anu():
             talk(info)
         elif 'joke' in command:
             talk(pyjokes.get_joke())
-        elif "stop" in command:
+        elif "stop" in command or c == 1:
             break
         elif "exit" in command:
             exit(0)
@@ -112,6 +115,6 @@ def run_anu():
 
 while True:
     res = listen_bg()
-    if(res == "anu"):
+    if(res == "hello anu"):
         run_anu()
 
